@@ -3,9 +3,9 @@ from django.db import models
 
 
 class Invoice(models.Model):
-    note   = models.TextField(null=True, blank=True)
-    image  = models.ImageField(null=True, blank=True)
-    number = models.AutoField(primary_key=True) 
+    note       = models.TextField(null=True, blank=True)
+    image      = models.ImageField(null=True, blank=True)
+    number     = models.AutoField(primary_key=True) 
     inv_amount = models.IntegerField(null=True, blank=True, help_text="Сумма за услуги компании")
     
     ord = models.CharField(
