@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRM System</title>
+  {% block stylesheets %}
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  {% endblock %}
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    {% include "includes/sidebar.html" %}
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      {% block content %}
+      {% endblock %}
+    </main>
+  </div>
+  {% block scripts %}
+  {% endblock %}
+</body>
+</html>

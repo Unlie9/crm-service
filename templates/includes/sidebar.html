@@ -1,0 +1,72 @@
+<aside class="sidebar-top">
+  <ul>
+    <li>
+      <a href="{% url "index" %}">Home</a>
+    </li>
+    <li>
+      Invoices
+    </li>
+    <li>
+      <a href="{% url "payment:payment-list" %}">Payments</a>
+    </li>
+  </ul>
+
+</aside>
+
+{% block stylesheet %}
+
+<style>
+
+.sidebar-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: aqua;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 1);
+}
+
+.sidebar-top ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 15px
+}
+
+.sidebar-top li {
+  cursor: pointer;
+  background-color: azure;
+  color: black;
+}
+
+/*
+.sidebar-top {
+    position: fixed;  Фиксирует панель 
+    top: 0;           Выравнивает по верхнему краю 
+    left: 0;          Прижать к левому краю 
+    width: 100%;      Занимает всю ширину страницы 
+    background-color: #f8f8f8;   Цвет фона 
+    padding: 10px;    Внутренний отступ 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Тень для разделения 
+  }
+
+  .sidebar-top ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;    Для горизонтального отображения 
+    gap: 15px;        Расстояние между элементами 
+  }
+
+  .sidebar-top ul li {
+    cursor: pointer;
+  }
+*/
+</style>
+
+
+
+
+{% endblock %}

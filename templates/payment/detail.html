@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="payment-container">
+  <h1>Payment Details</h1>
+  <table class="payment-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Balance</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ payment.name }}</td>
+        <td>{{ payment.first_name }}</td>
+        <td>{{ payment.last_name }}</td>
+        <td>{{ payment.balance }}</td>
+        <td>{{ payment.get_status_display }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <h1>
+    Limits
+  </h1>
+  <table class="payment-table">
+    <thead>
+      <tr>
+        <th>Limit</th>
+        <th>Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        {% for limit in payment.limits.all %}
+          {% if limit %}
+            <td>
+              {{ limit.name }}
+            </td>
+            <td>
+              {{ limit.value }}
+            </td>
+          {% else %}
+            -
+          {% endif %}
+        {% endfor %}
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+.payment-container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.payment-container h1 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.payment-table {
+  width: 100%;
+  height: 200px;
+  border-collapse: collapse;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+.payment-table th, .payment-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.payment-table th {
+  background-color: #4CAF50;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.payment-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.payment-table tr:hover {
+  background-color: #ddd;
+}
+
+.payment-table td {
+  color: #555;
+}
+</style>
+{% endblock %}
