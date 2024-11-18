@@ -3,44 +3,24 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 
-from payment.models import Payment
+from payment.models import Limit
 from payment.forms import PaymentForm
 
 
-def index(request):
-    context = {
-        'title': 'Index Page',
-        'message': 'Welcome to the Index Page without a model!',
-    }
-    return render(request, "index.html", context)
-
-
-class PaymentListView(generic.ListView):
-    model = Payment
-    template_name = "payment/list.html"
+class LimitListView(generic.ListView):
+    model = Limit
+    template_name = "limit/list.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["payments"] = Payment.objects.all()
+        context["Limits"] = Limit.objects.all()
         
         return context
+    
 
-
-class PaymentDetailView(generic.DetailView):
-    model = Payment
-    template_name = "payment/detail.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context["payment"] = self.object
-        
-        return context
-
-
-class PaymentCreateView(generic.CreateView):
-    model = Payment
-    template_name = "payment/form.html"
+class LimitCreateView(generic.CreateView):
+    model = Limit
+    template_name = "limit/form.html"
     form_class = PaymentForm
     success_url = reverse_lazy("payment:payment-list")
 
@@ -59,17 +39,17 @@ class PaymentCreateView(generic.CreateView):
         if self.request.headers.get("x-requested-with") == "XMLHttpRequest":
             return JsonResponse({
                 "success": True,
-                "message": "Payment success",
+                "message": "Limit success",
                 "redirect_url": reverse_lazy("payment:payment-list")
             }, status=200)
         
         return super().form_valid(form)
 
-class PaymentUpdateView(PaymentCreateView, generic.UpdateView):
+class PaymentUpdateView(LimitCreateView, generic.UpdateView):
     pass
 
 
-class PaymentDeleteView(generic.DeleteView):
-    model = Payment
-    template_name = "payment/delete.html"
+class LimitDeleteView(generic.DeleteView):
+    model = Limit
+    template_name = "limit/delete.html"
     success_url = reverse_lazy("payment:payment-list")

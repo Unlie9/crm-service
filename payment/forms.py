@@ -5,10 +5,23 @@ class PaymentForm(forms.ModelForm):
 
     class Meta:
         model = Payment
-        fields = ['name', 'first_name', 'last_name', 'balance', 'status']
-        # exclude = ["limits", "site", "invoice"]
+        fields = ['name', 'first_name', 'last_name', 'balance', 'status', "limits"]
 
     
+    def validate_limits(self):
+        limits = self.cleaned_data.get("limits")
+        balance = self.cleaned_data.get('balance')
+
+        if not limits.exists():
+            raise forms.ValidationError("At least one limit must be assigned.")
+
+        # Валидация баланса относительно лимитов
+        for limit in limits:
+            if limit.name == "MIN_BALANCE_LIMIT" and balance < limit.value:
+                self.add_error("balance", f"Balance cannot be less than {limit.value}.")
+            if limit.name == "MAX_BALANCE_LIMIT" and balance > limit.value:
+                self.add_error("balance", f"Balance cannot exceed {limit.value}.")
+
     def validate_name(self):
         name = self.cleaned_data.get("name")
 
@@ -37,6 +50,7 @@ class PaymentForm(forms.ModelForm):
       self.validate_name()
       self.validate_initials()
       self.validate_balance()
+      self.validate_limits()
 
       return cleaned_data
     
