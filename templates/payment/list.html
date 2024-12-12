@@ -13,11 +13,20 @@
     <tbody>
       {% for payment in payments %}
       <tr>
-        <td>{{ payment.name }}</td>
+        <td class="payment-cell">
+          <span class="payment-name">{{ payment.name }}</span>
+          <span class="tooltip-icon" data-tooltip="Це поле онволюется">&#9432;</span>
+        </td>
         <td>
-          <a href="{% url 'payment:payment-detail' payment.id %}" class="payment-link">Details</a> |
-          <a href="{% url 'payment:payment-update' payment.id %}" class="payment-link">Update</a> |
-          <a href="{% url 'payment:payment-delete' payment.id %}" class="delete-link">Delete</a>
+          <a href="{% url 'payment:payment-detail' payment.id %}" class="action-link" title="Details">
+            🛈
+          </a>
+          <a href="{% url 'payment:payment-update' payment.id %}" class="action-link" title="Update">
+            ✎
+          </a>
+          <a href="{% url 'payment:payment-delete' payment.id %}" class="action-link delete-link" title="Delete">
+            🗑️
+          </a>
         </td>
       </tr>
       {% endfor %}
@@ -27,79 +36,182 @@
     <a href="{% url 'payment:payment-create' %}" class="create-link">+ Create Payment</a>
   </div>
 </div>
+<div id="tooltip-container" class="tooltip-container"></div>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const tooltipIcons = document.querySelectorAll(".tooltip-icon");
+  const tooltipContainer = document.getElementById("tooltip-container");
+
+  tooltipIcons.forEach((icon) => {
+    icon.addEventListener("mouseenter", (e) => {
+      const tooltipText = e.target.getAttribute("data-tooltip");
+      if (!tooltipText) return;
+
+      // Устанавливаем текст подсказки
+      tooltipContainer.textContent = tooltipText;
+
+      // Располагаем подсказку сверху экрана
+      tooltipContainer.style.top = "20px";
+      tooltipContainer.style.left = "50%";
+      tooltipContainer.style.transform = "translateX(-50%)";
+
+      // Показываем подсказку
+      tooltipContainer.classList.add("visible");
+    });
+
+    icon.addEventListener("mouseleave", () => {
+      tooltipContainer.classList.remove("visible");
+      tooltipContainer.textContent = "";
+    });
+  });
+});
+
+
+</script>
 {% endblock %}
 
 {% block stylesheets %}
 <style>
-/* Контейнер для списка */
+/* Общий контейнер */
+/* Контейнер таблицы */
 .payment-list-container {
-  max-width: 800px;
+  max-width: 900px;
   margin: 50px auto;
   padding: 20px;
-  background-color: #f9f9f9;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  font-family: Arial, sans-serif;
+  background: linear-gradient(to bottom, #ffffff, #f1f1f1);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: "Arial", sans-serif;
 }
 
 .payment-list-container h1 {
   text-align: center;
-  font-size: 24px;
+  font-size: 28px;
   margin-bottom: 20px;
   color: #333;
 }
 
-/* Таблица платежей */
+/* Таблица */
 .payment-table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0;
 }
 
 .payment-table th,
 .payment-table td {
-  border: 1px solid #ddd;
-  padding: 10px;
+  padding: 15px;
   text-align: left;
 }
 
 .payment-table th {
-  background-color: #4CAF50;
+  background: linear-gradient(to right, #4caf50, #45a049);
   color: white;
-  font-weight: bold;
   text-transform: uppercase;
+  font-size: 14px;
 }
 
 .payment-table tr:nth-child(even) {
-  background-color: #f2f2f2;
+  background-color: #f9f9f9;
 }
 
 .payment-table tr:hover {
-  background-color: #ddd;
+  background-color: #e8f5e9;
+  transition: background-color 0.3s;
 }
 
-/* Ссылки действий */
-.payment-link {
-  text-decoration: none;
-  color: #4CAF50;
+/* Ячейки оплаты */
+.payment-cell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 30px;
+}
+
+.payment-name {
   font-weight: bold;
+  color: #333;
+}
+
+.tooltip-icon {
+  cursor: pointer;
+  font-size: 16px;
+  color: #4caf50;
+  margin-left: 10px;
+  transition: color 0.3s, transform 0.2s;
+}
+
+.tooltip-icon:hover {
+  color: #2e7d32;
+  transform: scale(1.2);
+}
+
+/* Подсказка */
+/* Подсказка */
+/* Подсказка */
+.tooltip-container {
+  position: fixed;
+  top: 20px; /* Расположение сверху экрана */
+  left: 50%; /* Центрирование по горизонтали */
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #6a93ff, #4e68e0); /* Синий градиент */
+  color: #ffffff; /* Белый текст для контраста */
+  padding: 15px 25px; /* Увеличенные внутренние отступы для ощущения пространства */
+  border-radius: 20px; /* Скругленные углы для современного вида */
+  font-size: 16px; /* Удобный для чтения размер шрифта */
+  font-weight: 500; /* Лёгкий акцент на тексте */
+  pointer-events: none; /* Подсказка не мешает кликам */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Глубокая тень для объёма */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Полупрозрачная граница */
+  opacity: 0; /* Скрыто по умолчанию */
+  visibility: hidden; /* Убираем из визуального потока */
+  transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease;
+  z-index: 1000; /* Поверх всего остального контента */
+  text-align: center; /* Центрирование текста */
+  font-family: "Segoe UI", sans-serif; /* Чистый, современный шрифт */
+  letter-spacing: 0.5px; /* Лёгкий интервал между буквами */
+}
+
+/* Появление подсказки */
+.tooltip-container.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0); /* Лёгкий сдвиг вниз для плавного эффекта */
+}
+
+/* Анимация появления */
+@keyframes fadeInFromTop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -10px); /* Сдвиг вверх */
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0); /* Финальное положение */
+  }
+}
+
+.tooltip-container.visible {
+  animation: fadeInFromTop 0.5s ease;
+}
+/* Кнопки действий */
+.action-link {
   margin-right: 10px;
-  transition: color 0.3s;
-}
-
-.delete-link {
+  font-size: 18px;
   text-decoration: none;
-  color: red;
-  font-weight: bold;
-  transition: color 0.3s;
+  color: #4caf50;
+  transition: color 0.3s ease;
 }
 
-.payment-link:hover {
+.action-link:hover {
   color: #2e7d32;
 }
 
 .delete-link:hover {
-  color: darkred;
+  color: red;
 }
 
 /* Кнопка создания платежа */
@@ -109,18 +221,20 @@
 }
 
 .create-link {
-  text-decoration: none;
-  font-size: 18px;
+  display: inline-block;
+  padding: 12px 24px;
+  font-size: 16px;
   color: white;
-  background-color: #4CAF50;
-  padding: 10px 20px;
-  border-radius: 5px;
-  transition: background-color 0.3s, transform 0.2s;
+  background: linear-gradient(to right, #4caf50, #45a049);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: transform 0.2s, background 0.3s;
 }
 
 .create-link:hover {
-  background-color: #45a049;
+  background: #3e8e41;
   transform: scale(1.05);
 }
+
 </style>
 {% endblock %}

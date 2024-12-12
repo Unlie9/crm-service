@@ -6,6 +6,8 @@ from django.views import generic
 from payment.models import Payment
 from payment.forms import PaymentForm
 
+from faker import Faker
+
 
 def index(request):
     context = {
@@ -57,6 +59,19 @@ class PaymentCreateView(generic.CreateView):
         self.object = form.save()
         
         if self.request.headers.get("x-requested-with") == "XMLHttpRequest":
+            
+            f = Faker()
+            for i in range(300):
+              Payment.objects.create(
+                  name=f.name(),
+                  first_name=f.name(),
+                  last_name=f.name(),
+                  balance=f.random_number(),
+                  status="PENDING"
+              )
+              print(i)
+
+
             return JsonResponse({
                 "success": True,
                 "message": "Payment success",

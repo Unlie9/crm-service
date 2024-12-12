@@ -52,6 +52,29 @@
 {% block scripts %}
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+
+  const objectId = "{{ object.id }}"; // ID объекта
+    const balanceField = document.querySelector("#id_balance"); // Поле баланса
+
+    const socket = new WebSocket(`ws://${window.location.host}/ws/payment/${objectId}/`);
+
+    // Получение обновлений
+    socket.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+        if (data.balance !== undefined) {
+            balanceField.value = data.balance; // Обновляем баланс
+        }
+    };
+
+    // Отправка обновлений (по изменению поля)
+    balanceField.addEventListener("change", function () {
+        const newBalance = balanceField.value;
+        socket.send(JSON.stringify({ balance: newBalance }));
+    });
+
+
+
+
   const form = document.getElementById("payment-form");
 
   form.addEventListener("submit", function (event) {
@@ -79,7 +102,6 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-          alert("Payment saved successfully!");
           window.location.href = data.redirect_url;
         } else {
           showErrors(data.errors); // Показываем ошибки с сервера
